@@ -1,0 +1,1 @@
+INSERT INTO `customer` (`id`, `name`, `sex`, `balance`, `phone`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`, `del_flag`) VALUES (1111, 'zsm', '男', 1000, '13213131313', 'admin', '2023-5-31 19:29:23', 'admin', '2023-5-31 19:29:33', NULL, '0');
