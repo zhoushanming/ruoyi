@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scheduling.project.system.forecastdata.mapper.ForecastdataMapper">
+    
+    <resultMap type="Forecastdata" id="ForecastdataResult">
+        <result property="id"    column="id"    />
+        <result property="storeId"    column="store_id"    />
+        <result property="dater"    column="dater"    />
+        <result property="starttime"    column="starttime"    />
+        <result property="endtime"    column="endtime"    />
+        <result property="rateflow"    column="rateflow"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectForecastdataVo">
+        select id, store_id, dater, starttime, endtime, rateflow, create_by, create_time, update_by, update_time, del_flag from forecastdata
+    </sql>
+
+    <select id="selectForecastdataList" parameterType="Forecastdata" resultMap="ForecastdataResult">
+        <include refid="selectForecastdataVo"/>
+        <where>  
+            <if test="starttime != null "> and starttime = #{starttime}</if>
+            <if test="endtime != null "> and endtime = #{endtime}</if>
+        </where>
+    </select>
+    
+    <select id="selectForecastdataById" parameterType="Long" resultMap="ForecastdataResult">
+        <include refid="selectForecastdataVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertForecastdata" parameterType="Forecastdata">
+        insert into forecastdata
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="storeId != null">store_id,</if>
+            <if test="dater != null">dater,</if>
+            <if test="starttime != null">starttime,</if>
+            <if test="endtime != null">endtime,</if>
+            <if test="rateflow != null">rateflow,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="storeId != null">#{storeId},</if>
+            <if test="dater != null">#{dater},</if>
+            <if test="starttime != null">#{starttime},</if>
+            <if test="endtime != null">#{endtime},</if>
+            <if test="rateflow != null">#{rateflow},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateForecastdata" parameterType="Forecastdata">
+        update forecastdata
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="storeId != null">store_id = #{storeId},</if>
+            <if test="dater != null">dater = #{dater},</if>
+            <if test="starttime != null">starttime = #{starttime},</if>
+            <if test="endtime != null">endtime = #{endtime},</if>
+            <if test="rateflow != null">rateflow = #{rateflow},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteForecastdataById" parameterType="Long">
+        delete from forecastdata where id = #{id}
+    </delete>
+
+    <delete id="deleteForecastdataByIds" parameterType="String">
+        delete from forecastdata where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

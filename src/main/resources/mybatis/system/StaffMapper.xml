@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scheduling.project.system.staff.mapper.StaffMapper">
+    <resultMap type="Staff" id="StaffResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="email" column="email"/>
+        <result property="position" column="position"/>
+        <result property="storeId" column="store_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+    <resultMap id="StaffEmployeePreferencesResult" type="Staff" extends="StaffResult">
+        <collection property="employeePreferencesList" notNullColumn="sub_id" javaType="java.util.List"
+                    resultMap="EmployeePreferencesResult"/>
+    </resultMap>
+
+    <resultMap type="EmployeePreferences" id="EmployeePreferencesResult">
+        <result property="id" column="sub_id"/>
+        <result property="preferenceType" column="sub_preference_type"/>
+        <result property="staff" column="sub_staff"/>
+        <result property="preferenceValue" column="sub_preference_value"/>
+        <result property="createBy" column="sub_create_by"/>
+        <result property="createTime" column="sub_create_time"/>
+        <result property="updateBy" column="sub_update_by"/>
+        <result property="updateTime" column="sub_update_time"/>
+        <result property="remark" column="sub_remark"/>
+        <result property="delFlag" column="sub_del_flag"/>
+    </resultMap>
+
+    <sql id="selectStaffVo">
+        select id,
+               name,
+               email,
+               position,
+               store_id,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               remark,
+               del_flag
+        from staff
+    </sql>
+
+    <select id="selectStaffList" parameterType="Staff" resultMap="StaffResult">
+        <include refid="selectStaffVo"/>
+        <where>
+            1 = 1
+            <if test="name != null  and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="email != null  and email != ''">
+                and email = #{email}
+            </if>
+            <if test="position != null  and position != ''">
+                and position = #{position}
+            </if>
+            <if test="storeId != null">
+                and store_id = #{storeId}
+            </if>
+        </where>
+        and del_flag = '0'
+    </select>
+
+    <select id="selectStaffById" parameterType="Long" resultMap="StaffResult">
+        <!--        select a.id,-->
+        <!--               a.name,-->
+        <!--               a.email,-->
+        <!--               a.position,-->
+        <!--               a.store_id,-->
+        <!--               a.create_by,-->
+        <!--               a.create_time,-->
+        <!--               a.update_by,-->
+        <!--               a.update_time,-->
+        <!--               a.remark,-->
+        <!--               a.del_flag,-->
+        <!--               b.id               as sub_id,-->
+        <!--               b.preference_type  as sub_preference_type,-->
+        <!--               b.staff            as sub_staff,-->
+        <!--               b.preference_value as sub_preference_value,-->
+        <!--               b.create_by        as sub_create_by,-->
+        <!--               b.create_time      as sub_create_time,-->
+        <!--               b.update_by        as sub_update_by,-->
+        <!--               b.update_time      as sub_update_time,-->
+        <!--               b.remark           as sub_remark,-->
+        <!--               b.del_flag         as sub_del_flag-->
+        <!--        from staff a-->
+        <!--                     left join employee_preferences b on b.staff = a.id-->
+        <!--        where a.id = #{id}-->
+        SELECT a.id,
+               a.NAME,
+               a.email,
+               a.position,
+               a.store_id,
+               a.create_by,
+               a.create_time,
+               a.update_by,
+               a.update_time,
+               a.remark,
+               a.del_flag,
+               b.id               AS sub_id,
+               b.preference_type  AS preferenceType,
+               b.preference_value AS preferenceValue
+        FROM staff a
+                     LEFT JOIN employee_preferences b ON b.staff = a.id
+        WHERE a.id = #{id}
+          and a.del_flag = '0'
+    </select>
+
+    <insert id="insertStaff" parameterType="Staff" useGeneratedKeys="true" keyProperty="id">
+        insert into staff
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="position != null">
+                position,
+            </if>
+            <if test="storeId != null">
+                store_id,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="email != null">
+                #{email},
+            </if>
+            <if test="position != null">
+                #{position},
+            </if>
+            <if test="storeId != null">
+                #{storeId},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateStaff" parameterType="Staff">
+        update staff
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="position != null">
+                position = #{position},
+            </if>
+            <if test="storeId != null">
+                store_id = #{storeId},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteStaffById" parameterType="Long">
+        <!--        delete from staff where id = #{id}-->
+        update staff
+        set del_flag = '2'
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStaffByIds" parameterType="String">
+        update staff
+        set del_flag = '2' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteEmployeePreferencesByStaffs" parameterType="String">
+        delete
+        from employee_preferences where staff in
+        <foreach item="staff" collection="array" open="(" separator="," close=")">
+            #{staff}
+        </foreach>
+    </delete>
+
+    <delete id="deleteEmployeePreferencesByStaff" parameterType="Long">
+        delete
+        from employee_preferences
+        where staff = #{staff}
+    </delete>
+
+    <insert id="batchEmployeePreferences">
+        insert into employee_preferences(id, preference_type, staff, preference_value, create_by, create_time,
+                                         update_by, update_time, remark, del_flag) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{item.id}, #{item.preferenceType}, #{item.staff}, #{item.preferenceValue}, #{item.createBy},
+             #{item.createTime}, #{item.updateBy}, #{item.updateTime}, #{item.remark}, #{item.delFlag})
+        </foreach>
+    </insert>
+    <select id="selectStaffByName" parameterType="String" resultMap="StaffResult">
+        select *
+        from staff
+                where 1 = 1
+        <if test="id != null and id != ''">
+            and  name = #{id}
+        </if>
+    </select>
+</mapper>

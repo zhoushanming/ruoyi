@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scheduling.project.system.schedule.mapper.ScheduleMapper">
+    
+    <resultMap type="Schedule" id="ScheduleResult">
+        <result property="id"    column="id"    />
+        <result property="staffId"    column="staff_id"    />
+        <result property="ruleId"    column="rule_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endtime"    column="endtime"    />
+    </resultMap>
+
+    <sql id="selectScheduleVo">
+        select id, staff_id, rule_id, create_by, create_time, update_by, update_time, del_flag, start_time, endtime from schedule
+    </sql>
+
+    <select id="selectScheduleList" parameterType="Schedule" resultMap="ScheduleResult">
+        <include refid="selectScheduleVo"/>
+        <where>  
+            <if test="staffId != null "> and staff_id = #{staffId}</if>
+            <if test="ruleId != null  and ruleId != ''"> and rule_id = #{ruleId}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endtime != null "> and endtime = #{endtime}</if>
+        </where>
+    </select>
+    
+    <select id="selectScheduleById" parameterType="Long" resultMap="ScheduleResult">
+        <include refid="selectScheduleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSchedule" parameterType="Schedule">
+        insert into schedule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="staffId != null">staff_id,</if>
+            <if test="ruleId != null">rule_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endtime != null">endtime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="staffId != null">#{staffId},</if>
+            <if test="ruleId != null">#{ruleId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endtime != null">#{endtime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSchedule" parameterType="Schedule">
+        update schedule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="staffId != null">staff_id = #{staffId},</if>
+            <if test="ruleId != null">rule_id = #{ruleId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endtime != null">endtime = #{endtime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteScheduleById" parameterType="Long">
+        delete from schedule where id = #{id}
+    </delete>
+
+    <delete id="deleteScheduleByIds" parameterType="String">
+        delete from schedule where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

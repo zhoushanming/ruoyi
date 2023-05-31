@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scheduling.project.system.preferences.mapper.EmployeePreferencesMapper">
+    <resultMap type="EmployeePreferences" id="EmployeePreferencesResult">
+        <result property="id" column="id"/>
+        <result property="preferenceType" column="preference_type"/>
+        <result property="staff" column="staff"/>
+        <result property="preferenceValue" column="preference_value"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+    <sql id="selectEmployeePreferencesVo">
+        select id,
+               preference_type,
+               staff,
+               preference_value,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               remark,
+               del_flag
+        from employee_preferences
+    </sql>
+
+    <select id="selectEmployeePreferencesList" parameterType="EmployeePreferences"
+            resultMap="EmployeePreferencesResult">
+        <include refid="selectEmployeePreferencesVo"/>
+        <where>
+            <if test="preferenceType != null">
+                and preference_type = #{preferenceType}
+            </if>
+            <if test="staff != null  and staff != ''">
+                and staff = #{staff}
+            </if>
+            <if test="preferenceValue != null  and preferenceValue != ''">
+                and preference_value = #{preferenceValue}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectEmployeePreferencesById" parameterType="Long" resultMap="EmployeePreferencesResult">
+        <include refid="selectEmployeePreferencesVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectEmployeePreferencesBystaff" parameterType="Long" resultMap="EmployeePreferencesResult">
+        <include refid="selectEmployeePreferencesVo"/>
+        where staff = #{staff}
+    </select>
+
+    <insert id="insertEmployeePreferences" parameterType="EmployeePreferences" useGeneratedKeys="true" keyProperty="id">
+        insert into employee_preferences
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="preferenceType != null">
+                preference_type,
+            </if>
+            <if test="staff != null">
+                staff,
+            </if>
+            <if test="preferenceValue != null">
+                preference_value,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="preferenceType != null">
+                #{preferenceType},
+            </if>
+            <if test="staff != null">
+                #{staff},
+            </if>
+            <if test="preferenceValue != null">
+                #{preferenceValue},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateEmployeePreferences" parameterType="EmployeePreferences">
+        update employee_preferences
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="preferenceType != null">
+                preference_type = #{preferenceType},
+            </if>
+            <if test="staff != null">
+                staff = #{staff},
+            </if>
+            <if test="preferenceValue != null">
+                preference_value = #{preferenceValue},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEmployeePreferencesById" parameterType="Long">
+        delete
+        from employee_preferences
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteEmployeePreferencesByIds" parameterType="String">
+        delete
+        from employee_preferences where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

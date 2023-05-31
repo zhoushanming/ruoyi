@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scheduling.project.system.rules.mapper.TypesettingRulesMapper">
+
+    <resultMap type="TypesettingRules" id="TypesettingRulesResult">
+        <result property="id"    column="id"    />
+        <result property="rulesType"    column="rules_type"    />
+        <result property="store"    column="store"    />
+        <result property="ruleValue"    column="rule_value"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="ruleStatus"    column="rule_status"    />
+    </resultMap>
+
+    <sql id="selectTypesettingRulesVo">
+        select id, rules_type, store, rule_value, create_by, create_time, update_by, update_time, remark, del_flag,rule_status from typesetting_rules
+    </sql>
+
+    <select id="selectTypesettingRulesList" parameterType="TypesettingRules" resultMap="TypesettingRulesResult">
+        <include refid="selectTypesettingRulesVo"/>
+        <where>
+            <if test="rulesType != null "> and rules_type = #{rulesType}</if>
+            <if test="store != null  and store != ''"> and store = #{store}</if>
+            <if test="ruleValue != null  and ruleValue != ''"> and rule_value = #{ruleValue}</if>
+             <if test="ruleStatus != null  and ruleStatus != ''"> and rule_status = #{ruleStatus}</if>
+        </where>
+    </select>
+
+    <select id="selectTypesettingRulesById" parameterType="Long" resultMap="TypesettingRulesResult">
+        <include refid="selectTypesettingRulesVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTypesettingRules" parameterType="TypesettingRules" useGeneratedKeys="true" keyProperty="id">
+        insert into typesetting_rules
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rulesType != null">rules_type,</if>
+            <if test="store != null">store,</if>
+            <if test="ruleValue != null">rule_value,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="ruleStatus != null">rule_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rulesType != null">#{rulesType},</if>
+            <if test="store != null">#{store},</if>
+            <if test="ruleValue != null">#{ruleValue},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="ruleStatus != null">#{ruleStatus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTypesettingRules" parameterType="TypesettingRules">
+        update typesetting_rules
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rulesType != null">rules_type = #{rulesType},</if>
+            <if test="store != null">store = #{store},</if>
+            <if test="ruleValue != null">rule_value = #{ruleValue},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+             <if test="ruleStatus != null">rule_status = #{ruleStatus},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTypesettingRulesById" parameterType="Long">
+        delete from typesetting_rules where id = #{id}
+    </delete>
+
+    <delete id="deleteTypesettingRulesByIds" parameterType="String">
+        delete from typesetting_rules where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
