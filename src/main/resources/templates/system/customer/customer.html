@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('客户管理列表')"/>
+    <th:block th:include="include :: select2-css"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <label>客户姓名：</label>
+                            <input type="text" name="name"/>
+                        </li>
+                        <li>
+                            <label>手机号：</label>
+                            <input type="text" name="phone"/>
+                        </li>
+                        <li>
+                            <label>性别：</label>
+                            <input type="text" name="sex"/>
+                        </li>
+                        <li>
+                            <label>账户金额：</label>
+                            <input type="text" name="balance"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:staff:add">
+                <i class="fa fa-plus"></i> 添加
+            </a>
+            <a class="btn btn-primary single disabled" onclick="$.operate.edit()"
+               shiro:hasPermission="system:staff:edit">
+                <i class="fa fa-edit"></i> 修改
+            </a>
+            <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()"
+               shiro:hasPermission="system:staff:remove">
+                <i class="fa fa-remove"></i> 删除
+            </a>
+            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:staff:export">
+                <i class="fa fa-download"></i> 导出
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: select2-js"/>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('system:customer:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('system:customer:remove')}]];
+    var preferenceTypeDatas = [[${@dict.getType('preference_type')}]];
+    var prefix2 = ctx + "system/role";
+    var prefix3 = ctx + "system/store";
+    var prefix = ctx + "system/customer";
+
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "客户管理",
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'id',
+                    title: '客户ID',
+                    visible: false
+                },
+                {
+                    field: 'name',
+                    title: '客户姓名'
+                },
+                {
+                    field: 'phone',
+                    title: '手机号'
+                },
+                {
+                    field: 'sex',
+                    title: '性别'
+                },
+                {
+                    field: 'balance',
+                    title: '账户金额'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>充值</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>消费</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+
+    $(function () {
+        /*本地注入方式*/
+        $("#post").select2({
+            placeholder: "请选择职位",
+            tags: true,
+            createTag: function (decorated, params) {
+                return null;
+            },
+            width: '100%',
+            ajax: {
+                type: 'post',
+                url: prefix2 + '/list',
+                dataType: 'json',
+                data: function (params) {
+                    var query = { //请求的参数, 关键字和搜索条件之类的
+                        roleName: params.term //select搜索框里面的value
+                    }
+                    return query;
+                },
+                delay: 250,
+                processResults: function (data, params) {
+                    //返回的选项必须处理成以下格式
+                    var results = [];
+                    var arr = data.rows;
+                    console.log(arr);
+                    var text;
+                    var id;
+                    for (i = 0; arr.length > i; i++) {
+                        id = arr[i].roleId;
+                        text = arr[i].roleName;
+                        results.push({id: id, text: text});
+                        console.log("id----" + id);
+                    }
+                    // alert(JSON.stringify(results));
+                    return {
+                        results: results  //必须赋值给results并且必须返回一个obj
+                    };
+                }
+
+            },
+            allowClear: true,//允许清空
+            escapeMarkup: function (markup) {
+                return markup;
+            }, // 自定义格式化防止xss注入
+            minimumInputLength: 0,
+            formatResult: function formatRepo(repo) {
+                return repo.text;
+            }, // 函数用来渲染结果
+            formatSelection: function formatRepoSelection(repo) {
+                return repo.text;
+            } // 函数用于呈现当前的选择
+
+        });
+    })
+
+    $(function () {
+        /*本地注入方式*/
+        $("#postmendian").select2({
+            placeholder: "请选择门店",
+            tags: true,
+            createTag: function (decorated, params) {
+                return null;
+            },
+            width: '100%',
+            ajax: {
+                type: 'post',
+                url: prefix3 + '/list',
+                dataType: 'json',
+                data: function (params) {
+                    var query = { //请求的参数, 关键字和搜索条件之类的
+                        name: params.term //select搜索框里面的value
+                    }
+                    return query;
+                },
+                delay: 250,
+                processResults: function (data, params) {
+                    //返回的选项必须处理成以下格式
+                    var results = [];
+                    var arr = data.rows;
+                    console.log(arr);
+                    var text;
+                    var id;
+                    for (i = 0; arr.length > i; i++) {
+                        id = arr[i].id;
+                        text = arr[i].name;
+                        results.push({id: id, text: text});
+                        console.log("id----" + id);
+                    }
+                    // alert(JSON.stringify(results));
+                    return {
+                        results: results  //必须赋值给results并且必须返回一个obj
+                    };
+                }
+
+            },
+            allowClear: true,//允许清空
+            escapeMarkup: function (markup) {
+                return markup;
+            }, // 自定义格式化防止xss注入
+            minimumInputLength: 0,
+            formatResult: function formatRepo(repo) {
+                return repo.text;
+            }, // 函数用来渲染结果
+            formatSelection: function formatRepoSelection(repo) {
+                return repo.text;
+            } // 函数用于呈现当前的选择
+
+        });
+    })
+</script>
+</body>
+</html>

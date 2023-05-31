@@ -76,11 +76,11 @@ public class StaffController extends BaseController {
                 list.get(i).setStoreName(store.getName());
             }
             //偏好
-            EmployeePreferences employeePreferences = employeePreferencesMapper.selectEmployeePreferencesBystaff(list.get(i).getId());
-            if (employeePreferences != null) {
-                list.get(i).setPreferenceValue(employeePreferences.getPreferenceValue());
-                list.get(i).setPreferenceType(employeePreferences.getPreferenceType());
-            }
+//            EmployeePreferences employeePreferences = employeePreferencesMapper.selectEmployeePreferencesBystaff(list.get(i).getId());
+//            if (employeePreferences != null) {
+//                list.get(i).setPreferenceValue(employeePreferences.getPreferenceValue());
+//                list.get(i).setPreferenceType(employeePreferences.getPreferenceType());
+//            }
         }
         return getDataTable(list);
     }
