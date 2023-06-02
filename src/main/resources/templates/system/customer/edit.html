@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改客户信息')" />
+    <th:block th:include="include :: select2-css"/>
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-staff-edit" th:object="${staff}">
+            <h4 class="form-header h4">员工管理信息</h4>
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">员工姓名：</label>
+                <div class="col-sm-8">
+                    <input name="name" th:field="*{name}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">邮件：</label>
+                <div class="col-sm-8">
+                    <input name="email" th:field="*{email}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">职位：</label>
+                <div class="col-sm-8">
+<!--                    <input name="position" th:field="*{position}" class="form-control" type="text">-->
+                    <select id="post" class="form-control select2-multiple" name="position" required>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">员工所属门店：</label>
+                <div class="col-sm-8">
+<!--                    <input name="storeId" th:field="*{storeId}" class="form-control" type="text">-->
+                    <select id="postmendian" class="form-control select2-multiple" name="storeId" required>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <textarea name="remark" class="form-control">[[*{remark}]]</textarea>
+                </div>
+            </div>
+            <h4 class="form-header h4">员工偏好信息</h4>
+            <div class="row">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">偏好可选值类型：</label>
+                    <div class="col-sm-8">
+                        <div class="col-sm-8">
+                            <select name="preferenceType" class="form-control m-b" th:with="type=${@dict.getType('preference_type')}">
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{preferenceType}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">偏好值：</label>
+                    <div class="col-sm-8">
+                        <input name="preferenceValue" th:field="*{preferenceValue}" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: select2-js"/>
+    <script th:inline="javascript">
+        var prefix = ctx + "system/staff";
+        var prefix2 = ctx + "system/role";
+        var prefix3 = ctx + "system/store";
+        var id1 = [[${staff.position}]];
+        var id2 = [[${staff.storeId}]];
+        allotRoleBtn1(id1);
+        allotRoleBtn2(id2);
+        $("#form-staff-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-staff-edit').serialize());
+            }
+        }
+        $(function () {
+            /*本地注入方式*/
+            $("#post").select2({
+                placeholder: "请选择职位",
+                tags: true,
+                createTag: function (decorated, params) {
+                    return null;
+                },
+                width: '100%',
+                ajax: {
+                    type: 'post',
+                    url: prefix2 + '/list',
+                    dataType: 'json',
+                    data: function (params) {
+                        var query = { //请求的参数, 关键字和搜索条件之类的
+                            roleName: params.term //select搜索框里面的value
+                        }
+                        return query;
+                    },
+                    delay: 250,
+                    processResults: function (data, params) {
+                        //返回的选项必须处理成以下格式
+                        var results = [];
+                        var arr = data.rows;
+                        console.log(arr);
+                        var text;
+                        var id;
+                        for (i = 0; arr.length > i; i++) {
+                            id = arr[i].roleId;
+                            text = arr[i].roleName;
+                            results.push({id: id, text: text});
+                            console.log("id----" + id);
+                        }
+                        // alert(JSON.stringify(results));
+                        return {
+                            results: results  //必须赋值给results并且必须返回一个obj
+                        };
+                    }
+
+                },
+                allowClear: true,//允许清空
+                escapeMarkup: function (markup) {
+                    return markup;
+                }, // 自定义格式化防止xss注入
+                minimumInputLength: 0,
+                formatResult: function formatRepo(repo) {
+                    return repo.text;
+                }, // 函数用来渲染结果
+                formatSelection: function formatRepoSelection(repo) {
+                    return repo.text;
+                } // 函数用于呈现当前的选择
+
+            });
+        })
+
+        $(function () {
+            /*本地注入方式*/
+            $("#postmendian").select2({
+                placeholder: "请选择门店",
+                tags: true,
+                createTag: function (decorated, params) {
+                    return null;
+                },
+                width: '100%',
+                ajax: {
+                    type: 'post',
+                    url: prefix3 + '/list',
+                    dataType: 'json',
+                    data: function (params) {
+                        var query = { //请求的参数, 关键字和搜索条件之类的
+                            name: params.term //select搜索框里面的value
+                        }
+                        return query;
+                    },
+                    delay: 250,
+                    processResults: function (data, params) {
+                        //返回的选项必须处理成以下格式
+                        var results = [];
+                        var arr = data.rows;
+                        console.log(arr);
+                        var text;
+                        var id;
+                        for (i = 0; arr.length > i; i++) {
+                            id = arr[i].id;
+                            text = arr[i].name;
+                            results.push({id: id, text: text});
+                            console.log("id----" + id);
+                        }
+                        // alert(JSON.stringify(results));
+                        return {
+                            results: results  //必须赋值给results并且必须返回一个obj
+                        };
+                    }
+
+                },
+                allowClear: true,//允许清空
+                escapeMarkup: function (markup) {
+                    return markup;
+                }, // 自定义格式化防止xss注入
+                minimumInputLength: 0,
+                formatResult: function formatRepo(repo) {
+                    return repo.text;
+                }, // 函数用来渲染结果
+                formatSelection: function formatRepoSelection(repo) {
+                    return repo.text;
+                } // 函数用于呈现当前的选择
+
+            });
+        })
+        /**
+         * 回显
+         * @param id
+         */
+        function allotRoleBtn1(id) {
+            console.log(prefix);
+            $('#post').val(null).trigger('change');//加载静态框时先清空。
+            if (id) {
+                $.ajax({
+                    type: 'get',
+                    url: prefix2 + '/listname',
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    data: {categoryId: id},
+                    success: function (res) {
+                        var results = [];
+                        var arr = res;
+                        console.log(arr);
+                        var text;
+                        var id;
+                        id = arr.roleId;
+                        text = arr.roleName;
+
+                        results.push({id: id, text: text});
+
+                        console.log(JSON.stringify(results[0]) + results[0].text);
+                        var search = results[0];//后台搜索或者编辑返回的数据
+                        if ('' != search) {
+                            $("#post").append(new Option(search.text, search.id, false, true));//第一个参数时id,第二个参数是text
+                            $("#post").trigger("change");
+                        }
+                    }
+                });
+            }
+        }
+
+
+        /**
+         * 回显
+         * @param id
+         */
+        function allotRoleBtn2(id) {
+            console.log(prefix);
+            $('#postmendian').val(null).trigger('change');//加载静态框时先清空。
+            if (id) {
+                $.ajax({
+                    type: 'get',
+                    url: prefix3 + '/listname',
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    data: {categoryId: id},
+                    success: function (res) {
+                        var results = [];
+                        var arr = res;
+                        console.log(arr);
+                        var text;
+                        var id;
+                        id = arr.id;
+                        text = arr.name;
+
+                        results.push({id: id, text: text});
+                        console.log("门店-----------");
+                        console.log(JSON.stringify(results[0]) + results[0].text);
+                        var search = results[0];//后台搜索或者编辑返回的数据
+                        if ('' != search) {
+                            $("#postmendian").append(new Option(search.text, search.id, false, true));//第一个参数时id,第二个参数是text
+                            $("#postmendian").trigger("change");
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

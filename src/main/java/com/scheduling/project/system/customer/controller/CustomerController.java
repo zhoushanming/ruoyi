@@ -11,10 +11,8 @@ import com.scheduling.project.system.store.domain.Store;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,5 +37,14 @@ public class CustomerController extends BaseController {
         startPage();
         List<Customer> list = customerService.selectCustomerList(Customer);
         return getDataTable(list);
+    }
+
+    /**
+     * 修改员工管理
+     */
+    @RequiresPermissions("system:customer:edit")
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable("id") Long id, ModelMap mmap) {
+        return prefix + "/edit";
     }
 }
