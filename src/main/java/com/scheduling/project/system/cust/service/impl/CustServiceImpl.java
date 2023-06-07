@@ -96,7 +96,6 @@ public class CustServiceImpl implements ICustService
     @Override
     public int deleteCustByIds(String ids)
     {
-        custMapper.deleteEmployeePreferencesByCusts(Convert.toStrArray(ids));
         return custMapper.deleteCustByIds(Convert.toStrArray(ids));
     }
 

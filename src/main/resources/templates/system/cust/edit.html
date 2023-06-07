@@ -12,19 +12,19 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">客户姓名：</label>
                 <div class="col-sm-8">
-                    <input name="name" th:field="*{name}" class="form-control" type="text" readonly >
+                    <input name="name" th:field="*{name}" class="form-control" type="text"  >
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">性别：</label>
                 <div class="col-sm-8">
-                    <input name="name" th:field="*{sex}" class="form-control" type="text" readonly>
+                    <input name="name" th:field="*{sex}" class="form-control" type="text" >
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">手机号：</label>
                 <div class="col-sm-8">
-                    <input name="email" th:field="*{phone}" class="form-control" type="text"readonly>
+                    <input name="email" th:field="*{phone}" class="form-control" type="text">
                 </div>
             </div>
             <div class="form-group">
@@ -47,7 +47,7 @@
 
         function submitHandler() {
             if ($.validate.form()) {
-                $.operate.save(prefix + "/recharge", $('#form-cust-edit').serialize());
+                $.operate.save(prefix + "/edit", $('#form-cust-edit').serialize());
             }
         }
 

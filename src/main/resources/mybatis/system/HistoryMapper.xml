@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.scheduling.project.system.cust.mapper.CustMapper">
-    <resultMap type="Cust" id="CustResult">
+<mapper namespace="com.scheduling.project.system.cust.mapper.HistoryMapper">
+    <resultMap type="History" id="HistoryResult">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="sex" column="sex"/>
@@ -13,13 +13,13 @@
 
 
 
-    <sql id="selectCustVo">
+    <sql id="selectHistoryVo">
         select id,name,sex,phone,balance
         from customer
     </sql>
 
-    <select id="selectCustList" parameterType="Cust" resultMap="CustResult">
-        <include refid="selectCustVo"/>
+    <select id="selectHistoryList" parameterType="History" resultMap="HistoryResult">
+        <include refid="selectHistoryVo"/>
         <where>
             1 = 1
             <if test="name != null  and name != ''">
@@ -32,14 +32,14 @@
         and del_flag = '0'
     </select>
 
-    <select id="selectCustById" parameterType="Long" resultMap="CustResult">
+    <select id="selectHistoryById" parameterType="Long" resultMap="HistoryResult">
         SELECT id,name,sex,phone,balance
         FROM customer a
         WHERE a.id = #{id}
         and a.del_flag = '0'
     </select>
 
-    <insert id="insertCust" parameterType="Cust" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertHistory" parameterType="History" useGeneratedKeys="true" keyProperty="id">
         insert into customer
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null">
@@ -107,7 +107,7 @@
         </trim>
     </insert>
 
-    <update id="updateCust" parameterType="Cust">
+    <update id="updateHistory" parameterType="History">
         update customer
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null">
@@ -144,14 +144,14 @@
         where id = #{id}
     </update>
 
-    <update id="deleteCustById" parameterType="Long">
+    <update id="deleteHistoryById" parameterType="Long">
         <!--        delete from cust where id = #{id}-->
         update customer
         set del_flag = '2'
         where id = #{id}
     </update>
 
-    <delete id="deleteCustByIds" parameterType="String">
+    <delete id="deleteHistoryByIds" parameterType="String">
         update customer
         set del_flag = '2' where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
@@ -159,7 +159,7 @@
         </foreach>
     </delete>
 
-    <select id="selectCustByName" parameterType="String" resultMap="CustResult">
+    <select id="selectHistoryByName" parameterType="String" resultMap="HistoryResult">
         select *
         from customer
         where 1 = 1
