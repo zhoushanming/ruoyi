@@ -45,6 +45,8 @@ public class CustomerController extends BaseController {
     @RequiresPermissions("system:customer:edit")
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Long id, ModelMap mmap) {
+        Customer customer = new Customer();
+        mmap.put("customer", customer);
         return prefix + "/edit";
     }
 }

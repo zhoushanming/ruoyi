@@ -151,7 +151,7 @@ public class Staff extends BaseEntity
 
     @Override
     public String toString() {
-        return "Staff{" +
+        return "Cust{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +

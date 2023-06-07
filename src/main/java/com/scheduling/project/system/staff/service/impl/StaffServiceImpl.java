@@ -137,7 +137,7 @@ public class StaffServiceImpl implements IStaffService
      *
      * @param staff 员工管理对象
      */
-//    public void insertEmployeePreferences(Staff staff)
+//    public void insertEmployeePreferences(Cust staff)
 //    {
 //        List<EmployeePreferences> employeePreferencesList = staff.getEmployeePreferencesList();
 //        Long id = staff.getId();
