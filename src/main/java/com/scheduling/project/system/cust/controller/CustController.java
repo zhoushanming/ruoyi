@@ -7,8 +7,10 @@ import com.scheduling.framework.web.controller.BaseController;
 import com.scheduling.framework.web.domain.AjaxResult;
 import com.scheduling.framework.web.page.TableDataInfo;
 import com.scheduling.project.system.cust.domain.Cust;
+import com.scheduling.project.system.cust.domain.History;
 import com.scheduling.project.system.cust.mapper.CustMapper;
 import com.scheduling.project.system.cust.service.ICustService;
+import com.scheduling.project.system.cust.service.IHistoryService;
 import com.scheduling.project.system.role.domain.Role;
 import com.scheduling.project.system.role.mapper.RoleMapper;
 import com.scheduling.project.system.store.domain.Store;
@@ -42,8 +44,8 @@ public class CustController extends BaseController {
     private CustMapper custMapper;
     @Autowired
     private StoreMapper storeMapper;
-
-
+    @Autowired
+    private IHistoryService historyService;
     @RequiresPermissions("system:cust:view")
     @GetMapping()
     public String cust() {
@@ -158,6 +160,13 @@ public class CustController extends BaseController {
         BigDecimal recharge = cust.getRecharge();
         BigDecimal balance =  recharge.add(cust.getBalance());
         cust.setBalance(balance);
+        History history = new History();
+        history.setPhone(cust.getPhone());
+        history.setCustId(cust.getId());
+        history.setCustName(cust.getName());
+        history.setNowBalance(balance);
+        history.setRecord("+"+recharge);
+        historyService.insertHistory(history);
         return toAjax(custService.updateCust(cust));
     }
 
@@ -175,6 +184,13 @@ public class CustController extends BaseController {
         BigDecimal balance = cust.getBalance();
         balance=balance.subtract(afterConsume);
         cust.setBalance(balance);
+        History history = new History();
+        history.setPhone(cust.getPhone());
+        history.setCustId(cust.getId());
+        history.setCustName(cust.getName());
+        history.setNowBalance(balance);
+        history.setRecord("-"+afterConsume);
+        historyService.insertHistory(history);
         return toAjax(custService.updateCust(cust));
     }
 

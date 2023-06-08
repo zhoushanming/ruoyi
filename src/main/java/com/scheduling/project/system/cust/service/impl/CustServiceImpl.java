@@ -6,9 +6,8 @@ import com.scheduling.common.utils.text.Convert;
 import com.scheduling.project.system.cust.domain.Cust;
 import com.scheduling.project.system.cust.mapper.CustMapper;
 
+import com.scheduling.project.system.cust.mapper.HistoryMapper;
 import com.scheduling.project.system.cust.service.ICustService;
-import com.scheduling.project.system.preferences.domain.EmployeePreferences;
-import com.scheduling.project.system.preferences.mapper.EmployeePreferencesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +25,6 @@ public class CustServiceImpl implements ICustService
 {
     @Autowired
     private CustMapper custMapper;
-
 
     /**
      * 查询员工管理
@@ -113,27 +111,4 @@ public class CustServiceImpl implements ICustService
         return custMapper.deleteCustById(id);
     }
 
-    /**
-     * 新增员工偏好信息
-     *
-     * @param cust 员工管理对象
-     */
-//    public void insertEmployeePreferences(Cust cust)
-//    {
-//        List<EmployeePreferences> employeePreferencesList = cust.getEmployeePreferencesList();
-//        Long id = cust.getId();
-//        if (StringUtils.isNotNull(employeePreferencesList))
-//        {
-//            List<EmployeePreferences> list = new ArrayList<EmployeePreferences>();
-//            for (EmployeePreferences employeePreferences : employeePreferencesList)
-//            {
-//                employeePreferences.setCust(id);
-//                list.add(employeePreferences);
-//            }
-//            if (list.size() > 0)
-//            {
-//                custMapper.batchEmployeePreferences(list);
-//            }
-//        }
-//    }
 }

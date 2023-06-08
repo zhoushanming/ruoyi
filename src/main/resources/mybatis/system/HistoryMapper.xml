@@ -5,166 +5,76 @@
 <mapper namespace="com.scheduling.project.system.cust.mapper.HistoryMapper">
     <resultMap type="History" id="HistoryResult">
         <result property="id" column="id"/>
-        <result property="name" column="name"/>
-        <result property="sex" column="sex"/>
+        <result property="custId" column="custId"/>
+        <result property="operateDate" column="operateDate"/>
+        <result property="record" column="record"/>
+        <result property="custName" column="custName"/>
         <result property="phone" column="phone"/>
-        <result property="balance" column="balance"/>
+        <result property="nowBalance" column="nowBalance"/>
     </resultMap>
 
 
 
     <sql id="selectHistoryVo">
-        select id,name,sex,phone,balance
-        from customer
+        select id,custId,operateDate,record,custName,phone,nowBalance
+        from history
     </sql>
 
     <select id="selectHistoryList" parameterType="History" resultMap="HistoryResult">
         <include refid="selectHistoryVo"/>
         <where>
             1 = 1
-            <if test="name != null  and name != ''">
-                and name like concat('%', #{name}, '%')
+            <if test="custName != null  and custName != ''">
+                and custName like concat('%', #{custName}, '%')
             </if>
             <if test="phone != null  and phone != ''">
                 and phone like concat('%', #{phone}, '%')
             </if>
         </where>
-        and del_flag = '0'
     </select>
 
-    <select id="selectHistoryById" parameterType="Long" resultMap="HistoryResult">
-        SELECT id,name,sex,phone,balance
-        FROM customer a
-        WHERE a.id = #{id}
-        and a.del_flag = '0'
-    </select>
 
     <insert id="insertHistory" parameterType="History" useGeneratedKeys="true" keyProperty="id">
-        insert into customer
+        insert into history
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="name != null">
-                name,
+            <if test="custName != null">
+                custName,
             </if>
-            <if test="sex != null">
-                sex,
+            <if test="custId != null">
+                custId,
+            </if>
+            <if test="operateDate != null">
+                operateDate,
+            </if>
+            <if test="record != null">
+                record,
             </if>
             <if test="phone != null">
                 phone,
             </if>
-            <if test="balance != null">
-                balance,
-            </if>
-            <if test="createBy != null">
-                create_by,
-            </if>
-            <if test="createTime != null">
-                create_time,
-            </if>
-            <if test="updateBy != null">
-                update_by,
-            </if>
-            <if test="updateTime != null">
-                update_time,
-            </if>
-            <if test="remark != null">
-                remark,
-            </if>
-            <if test="delFlag != null">
-                del_flag,
+            <if test="nowBalance != null">
+                nowBalance,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="name != null">
-                #{name},
+            <if test="custName != null">
+                #{custName},
             </if>
-            <if test="sex != null">
-                #{sex},
+            <if test="custId != null">
+                #{custId},
+            </if>
+            <if test="operateDate != null">
+                #{operateDate},
+            </if>
+            <if test="record != null">
+                #{record},
             </if>
             <if test="phone != null">
                 #{phone},
             </if>
-            <if test="balance != null">
-                #{balance},
-            </if>
-            <if test="createBy != null">
-                #{createBy},
-            </if>
-            <if test="createTime != null">
-                #{createTime},
-            </if>
-            <if test="updateBy != null">
-                #{updateBy},
-            </if>
-            <if test="updateTime != null">
-                #{updateTime},
-            </if>
-            <if test="remark != null">
-                #{remark},
-            </if>
-            <if test="delFlag != null">
-                #{delFlag},
+            <if test="nowBalance != null">
+                #{nowBalance},
             </if>
         </trim>
     </insert>
-
-    <update id="updateHistory" parameterType="History">
-        update customer
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="name != null">
-                name = #{name},
-            </if>
-            <if test="sex != null">
-                sex = #{sex},
-            </if>
-            <if test="phone != null">
-                phone = #{phone},
-            </if>
-            <if test="balance != null">
-                balance = #{balance},
-            </if>
-            <if test="createBy != null">
-                create_by = #{createBy},
-            </if>
-            <if test="createTime != null">
-                create_time = #{createTime},
-            </if>
-            <if test="updateBy != null">
-                update_by = #{updateBy},
-            </if>
-            <if test="updateTime != null">
-                update_time = #{updateTime},
-            </if>
-            <if test="remark != null">
-                remark = #{remark},
-            </if>
-            <if test="delFlag != null">
-                del_flag = #{delFlag},
-            </if>
-        </trim>
-        where id = #{id}
-    </update>
-
-    <update id="deleteHistoryById" parameterType="Long">
-        <!--        delete from cust where id = #{id}-->
-        update customer
-        set del_flag = '2'
-        where id = #{id}
-    </update>
-
-    <delete id="deleteHistoryByIds" parameterType="String">
-        update customer
-        set del_flag = '2' where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
-
-    <select id="selectHistoryByName" parameterType="String" resultMap="HistoryResult">
-        select *
-        from customer
-        where 1 = 1
-        <if test="id != null and id != ''">
-            and  name = #{id}
-        </if>
-    </select>
 </mapper>
