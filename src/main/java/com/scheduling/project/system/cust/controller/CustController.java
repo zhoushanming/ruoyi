@@ -53,7 +53,7 @@ public class CustController extends BaseController {
     }
 
     /**
-     * 查询员工管理列表
+     * 查询客户管理列表
      */
     @RequiresPermissions("system:cust:list")
     @PostMapping("/list")
@@ -65,20 +65,20 @@ public class CustController extends BaseController {
     }
 
     /**
-     * 导出员工管理列表
+     * 导出客户管理列表
      */
     @RequiresPermissions("system:cust:export")
-    @Log(title = "员工管理", businessType = BusinessType.EXPORT)
+    @Log(title = "客户管理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody
     public AjaxResult export(Cust cust) {
         List<Cust> list = custService.selectCustList(cust);
         ExcelUtil<Cust> util = new ExcelUtil<Cust>(Cust.class);
-        return util.exportExcel(list, "员工管理数据");
+        return util.exportExcel(list, "客户管理数据");
     }
 
     /**
-     * 新增员工管理
+     * 新增客户管理
      */
     @GetMapping("/add")
     public String add() {
@@ -86,10 +86,10 @@ public class CustController extends BaseController {
     }
 
     /**
-     * 新增保存员工管理
+     * 新增保存客户管理
      */
     @RequiresPermissions("system:cust:add")
-    @Log(title = "员工管理", businessType = BusinessType.INSERT)
+    @Log(title = "客户管理", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(Cust cust) {
@@ -97,7 +97,7 @@ public class CustController extends BaseController {
     }
 
     /**
-     * 修改员工管理
+     * 修改客户管理
      */
     @RequiresPermissions("system:cust:edit")
     @GetMapping("/edit/{id}")
@@ -108,7 +108,7 @@ public class CustController extends BaseController {
     }
 
     /**
-     * 修改员工管理
+     * 修改客户管理
      */
     @RequiresPermissions("system:cust:recharge")
     @GetMapping("/recharge/{id}")
@@ -119,7 +119,7 @@ public class CustController extends BaseController {
     }
 
     /**
-     * 修改员工管理
+     * 修改客户管理
      */
     @RequiresPermissions("system:cust:consume")
     @GetMapping("/consume/{id}")
@@ -139,10 +139,10 @@ public class CustController extends BaseController {
     }
 
     /**
-     * 修改保存员工管理
+     * 修改保存客户管理
      */
     @RequiresPermissions("system:cust:edit")
-    @Log(title = "员工管理", businessType = BusinessType.UPDATE)
+    @Log(title = "客户管理", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(Cust cust) {
@@ -153,7 +153,7 @@ public class CustController extends BaseController {
      * 金额充值
      */
     @RequiresPermissions("system:cust:recharge")
-    @Log(title = "员工管理", businessType = BusinessType.UPDATE)
+    @Log(title = "客户管理", businessType = BusinessType.UPDATE)
     @PostMapping("/recharge")
     @ResponseBody
     public AjaxResult recharge(Cust cust) {
@@ -174,7 +174,7 @@ public class CustController extends BaseController {
      * 消费
      */
     @RequiresPermissions("system:cust:consume")
-    @Log(title = "员工管理", businessType = BusinessType.UPDATE)
+    @Log(title = "客户管理", businessType = BusinessType.UPDATE)
     @PostMapping("/consume")
     @ResponseBody
     public AjaxResult consume(Cust cust) {
@@ -196,10 +196,10 @@ public class CustController extends BaseController {
 
 
     /**
-     * 删除员工管理
+     * 删除客户管理
      */
     @RequiresPermissions("system:cust:remove")
-    @Log(title = "员工管理", businessType = BusinessType.DELETE)
+    @Log(title = "客户管理", businessType = BusinessType.DELETE)
     @PostMapping("/remove")
     @ResponseBody
     public AjaxResult remove(String ids) {

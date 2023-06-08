@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
-    <th:block th:include="include :: header('修改客户管理')" />
+    <th:block th:include="include :: header('修改客户信息')" />
     <th:block th:include="include :: select2-css"/>
 </head>
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
         <form class="form-horizontal m" id="form-cust-edit" th:object="${cust}">
-            <h4 class="form-header h4">客户管理信息</h4>
+            <h4 class="form-header h4">修改客户信息</h4>
             <input name="id" th:field="*{id}" type="hidden">
             <div class="form-group">
                 <label class="col-sm-3 control-label">客户姓名：</label>
