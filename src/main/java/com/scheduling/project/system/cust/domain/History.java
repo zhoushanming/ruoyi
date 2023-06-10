@@ -9,7 +9,7 @@ public class History {
     private Long id;
 
     /** 客户姓名 */
-    @Excel(name = "客户姓名")
+    @Excel(name = "客户编号")
     private Long custId;
 
     /** 操作日期*/
@@ -31,6 +31,17 @@ public class History {
     /** 消费后剩余金额*/
     @Excel(name = "消费后剩余金额")
     private BigDecimal nowBalance;
+    /** 消费后剩余金额*/
+    @Excel(name = "备注")
+    private String remark;
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public Long getId() {
         return id;

@@ -76,7 +76,18 @@ public class CustController extends BaseController {
         ExcelUtil<Cust> util = new ExcelUtil<Cust>(Cust.class);
         return util.exportExcel(list, "客户管理数据");
     }
-
+    /**
+     * 导出客户管理列表
+     */
+    @RequiresPermissions("system:cust:export1")
+    @Log(title = "历史记录导出", businessType = BusinessType.EXPORT)
+    @PostMapping("/export1")
+    @ResponseBody
+    public AjaxResult export1(History history) {
+        List<History> list = historyService.selectHistoryList(history);
+        ExcelUtil<History> util = new ExcelUtil<History>(History.class);
+        return util.exportExcel(list, "历史数据");
+    }
     /**
      * 新增客户管理
      */
@@ -93,6 +104,14 @@ public class CustController extends BaseController {
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(Cust cust) {
+        History history = new History();
+        history.setPhone(cust.getPhone());
+        history.setCustId(cust.getId());
+        history.setCustName(cust.getName());
+        history.setNowBalance(cust.getBalance());
+        history.setRecord("+"+cust.getBalance());
+        history.setRemark(cust.getRemark());
+        historyService.insertHistory(history);
         return toAjax(custService.insertCust(cust));
     }
 
@@ -166,6 +185,7 @@ public class CustController extends BaseController {
         history.setCustName(cust.getName());
         history.setNowBalance(balance);
         history.setRecord("+"+recharge);
+        history.setRemark(cust.getRemark());
         historyService.insertHistory(history);
         return toAjax(custService.updateCust(cust));
     }
@@ -190,6 +210,7 @@ public class CustController extends BaseController {
         history.setCustName(cust.getName());
         history.setNowBalance(balance);
         history.setRecord("-"+afterConsume);
+        history.setRemark(cust.getRemark());
         historyService.insertHistory(history);
         return toAjax(custService.updateCust(cust));
     }

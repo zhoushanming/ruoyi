@@ -11,12 +11,13 @@
         <result property="custName" column="custName"/>
         <result property="phone" column="phone"/>
         <result property="nowBalance" column="nowBalance"/>
+        <result property="remark" column="remark"/>
     </resultMap>
 
 
 
     <sql id="selectHistoryVo">
-        select id,custId,operateDate,record,custName,phone,nowBalance
+        select id,custId,operateDate,record,custName,phone,nowBalance,remark
         from history
     </sql>
 
@@ -30,7 +31,11 @@
             <if test="phone != null  and phone != ''">
                 and phone like concat('%', #{phone}, '%')
             </if>
+            <if test="remark != null  and remark != ''">
+                and remark like concat('%', #{remark}, '%')
+            </if>
         </where>
+        order by operateDate desc
     </select>
 
 
@@ -55,6 +60,9 @@
             <if test="nowBalance != null">
                 nowBalance,
             </if>
+            <if test="remark != null">
+                remark,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="custName != null">
@@ -74,6 +82,9 @@
             </if>
             <if test="nowBalance != null">
                 #{nowBalance},
+            </if>
+            <if test="remark != null">
+                #{remark},
             </if>
         </trim>
     </insert>

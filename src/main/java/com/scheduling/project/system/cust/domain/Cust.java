@@ -18,10 +18,11 @@ public class Cust extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 员工ID */
+    @Excel(name = "客户编号")
     private Long id;
 
     /** 员工姓名 */
-    @Excel(name = "员工姓名")
+    @Excel(name = "客户姓名")
     private String name;
 
     /** 性别*/
@@ -31,8 +32,20 @@ public class Cust extends BaseEntity
     /** 手机号*/
     @Excel(name = "手机号")
     private String phone;
+    private String remark;
+
+    @Override
+    public String getRemark() {
+        return remark;
+    }
+
+    @Override
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     /** 余额*/
+    @Excel(name = "balance")
     private BigDecimal balance;
     /** 消费金额*/
     private BigDecimal consume;
@@ -56,7 +69,6 @@ public class Cust extends BaseEntity
     /** 折扣*/
     private BigDecimal discount;
     /** 充值金额*/
-    @Excel(name = "充值金额")
     private BigDecimal recharge;
 
     /** 删除标志（0代表存在 2代表删除） */

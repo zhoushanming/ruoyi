@@ -19,6 +19,10 @@
                                 <input type="text" name="phone"/>
                             </li>
                             <li>
+                                <label>备注：</label>
+                                <input type="text" name="remark"/>
+                            </li>
+                            <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
                                 <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
                             </li>
@@ -27,6 +31,11 @@
                 </form>
             </div>
             </div>
+         <div class="btn-group-sm" id="toolbar" role="group">
+             <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:cust:export1">
+                 <i class="fa fa-download"></i> 导出
+             </a>
+         </div>
             <div class="col-sm-12 select-table table-striped">
                 <table id="bootstrap-table"></table>
             </div>
@@ -43,7 +52,7 @@
                 updateUrl: prefix + "/edit/{id}",
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",
-                modalName: "排班管理",
+                modalName: "历史数据管理",
                 columns: [{
                     checkbox: true
                 },
@@ -72,6 +81,10 @@
                     field: 'operateDate',
                     title: '操作日期'
                 },
+                    {
+                        field: 'remark',
+                        title: '备注'
+                    },
               ]
             };
             $.table.init(options);
